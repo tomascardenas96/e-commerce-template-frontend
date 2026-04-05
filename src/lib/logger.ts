@@ -1,7 +1,7 @@
 const isDev = process.env.NODE_ENV === 'development';
 
 export const logger = {
-    info: (context: string, message: string, ...args: any[]) => {
+    info: (context: string, message: string, ...args: unknown[]) => {
         if (isDev) {
             console.log(
                 `%c[${context}] %c${message}`,
@@ -12,7 +12,7 @@ export const logger = {
         }
     },
 
-    error: (context: string, message: string, error?: any) => {
+    error: (context: string, message: string, error?: unknown) => {
         // Los errores siempre se reportan, pero con un formato controlado
         console.error(
             `%c[${context} - ERROR] %c${message}`,

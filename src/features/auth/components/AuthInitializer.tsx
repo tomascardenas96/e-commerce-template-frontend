@@ -59,7 +59,7 @@ export const AuthInitializer = ({ children }: AuthInitializerProps) => {
    * Se muestra mientras 'isChecking' es true para evitar que el usuario vea
    * contenido parpadeando antes de saber si tiene sesión.
    */
-  if (isChecking) return <LoadingSpinner label="Cargando usuario..." />;
+  if (isChecking) return <LoadingSpinner label="Cargando..." />;
 
   /**
    * Control de Hidratación.

@@ -10,77 +10,61 @@ export const RegisterForm = () => {
     formState: { errors },
   } = form;
 
-  const Header = ({ title, subtitle }: { title: string; subtitle: string }) => (
-    <div className="text-center">
-      <h2 className="text-3xl font-extrabold text-gray-900">{title}</h2>
-      <p className="mt-2 text-sm text-gray-500">{subtitle}</p>
-    </div>
-  );
-
   return (
-    <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-2xl shadow-xl border border-gray-100">
-      <Header
-        title="Registro"
-        subtitle="Ingresa tus credenciales para registrarte"
-      />
+    <form onSubmit={onSubmit} className="space-y-5">
+      <h1 className={`text-[2rem] font-bold mb-6`}>Crear Cuenta</h1>
 
-      <form onSubmit={onSubmit} className="mt-8 space-y-5">
+      <div className="flex gap-3">
         <Input
           label="Nombre"
-          placeholder="ejemplo"
+          placeholder="Juan"
           error={errors.name?.message}
           {...register("name")}
         />
-
         <Input
           label="Apellido"
-          placeholder="ejemplo"
+          placeholder="Pérez"
           error={errors.lastname?.message}
           {...register("lastname")}
         />
+      </div>
 
-        <Input
-          label="Correo Electrónico"
-          placeholder="ejemplo@correo.com"
-          error={errors.email?.message}
-          {...register("email")}
-        />
+      <Input
+        label="Correo Electrónico"
+        placeholder="you@example.com"
+        error={errors.email?.message}
+        {...register("email")}
+      />
 
-        <Input
-          label="Contraseña"
-          type="password"
-          placeholder="••••••••"
-          error={errors.password?.message}
-          {...register("password")}
-        />
+      <Input
+        label="Contraseña"
+        type="password"
+        placeholder="••••••••"
+        error={errors.password?.message}
+        {...register("password")}
+      />
 
-        <Input
-          label="Confirmar Contraseña"
-          type="password"
-          placeholder="••••••••"
-          error={errors.confirmPassword?.message}
-          {...register("confirmPassword")}
-        />
+      <Input
+        label="Confirmar Contraseña"
+        type="password"
+        placeholder="••••••••"
+        error={errors.confirmPassword?.message}
+        {...register("confirmPassword")}
+      />
 
-        {serverError && (
-          <div className="p-3 text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg animate-pulse">
-            {serverError}
-          </div>
-        )}
+      {serverError && (
+        <div className="p-3 text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded">
+          {serverError}
+        </div>
+      )}
 
-        <button
-          type="submit"
-          disabled={isLoading}
-          className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 transition-colors disabled:bg-blue-300"
-        >
-          {isLoading ? (
-            // <LoadingSpinner label="Verificando..." />
-            <p>Verificando...</p>
-          ) : (
-            "Registrarse"
-          )}
-        </button>
-      </form>
-    </div>
+      <button
+        type="submit"
+        disabled={isLoading}
+        className="w-full py-3.5 bg-white text-black text-xs tracking-[0.2em] font-medium uppercase hover:bg-white/90 transition-colors disabled:opacity-50"
+      >
+        {isLoading ? "Creando cuenta..." : "Crear Cuenta"}
+      </button>
+    </form>
   );
 };

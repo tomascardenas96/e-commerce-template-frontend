@@ -1,4 +1,11 @@
-import { LogOutBtn } from "@/features/auth/components/LogOutBtn";
+import { Inter, Manrope, Pinyon_Script } from "next/font/google";
+import "./globals.css";
+
+const manrope = Manrope({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-manrope",
+});
 
 export default function RootLayout({
   children,
@@ -7,7 +14,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body className="antialiased">{children}</body>
+      <body className={`${manrope.variable} ${manrope.className} antialiased`}>
+        {children}
+      </body>
     </html>
   );
 }

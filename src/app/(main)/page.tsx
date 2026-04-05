@@ -1,15 +1,21 @@
 "use client";
 
-import { useAuthStore } from "@/features/auth/store/authStore";
+import { HeroSection } from "@/components/landing/HeroSection";
+import { AboutSection } from "@/components/landing/AboutSection";
+import { ServicesSection } from "@/components/landing/ServicesSection";
+import { MembershipSection } from "@/components/landing/MembershipSection";
+import { TestimonialsSection } from "@/components/landing/TestimonialsSection";
+import { CtaSection } from "@/components/landing/CtaSection";
 
 export default function HomePage() {
-  const { user } = useAuthStore();
-
   return (
-    <main className="p-10">
-      <h1>
-        {user ? `Bienvenido ${user.name} ${user.lastname}!` : "Bienvenido!"}
-      </h1>
+    <main>
+      <HeroSection />
+      <AboutSection />
+      <ServicesSection />
+      <MembershipSection />
+      <TestimonialsSection />
+      <CtaSection />
     </main>
   );
 }

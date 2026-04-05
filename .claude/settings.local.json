@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run:*)",
+      "Bash(npx next:*)",
+      "Bash(node -e \":*)",
+      "Bash(npx -y playwright test -e \":*)",
+      "Bash(npm ls:*)",
+      "Bash(npm root:*)",
+      "Bash(node check-console.mjs)",
+      "Bash(npm list:*)",
+      "Bash(npx playwright:*)",
+      "Bash(npm cache:*)",
+      "Bash(npm pack:*)",
+      "Bash(npx --yes playwright test --list)",
+      "Bash(npm install:*)",
+      "Bash(npx tsc:*)",
+      "Bash(node -e \"const l = require\\('lucide-react'\\); const names = Object.keys\\(l\\).filter\\(k => k.toLowerCase\\(\\).includes\\('instagram'\\)\\); console.log\\(names\\);\")"
+    ]
+  }
+}

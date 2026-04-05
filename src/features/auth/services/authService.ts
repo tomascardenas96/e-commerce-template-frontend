@@ -3,7 +3,7 @@ import { logger } from "@/lib/logger";
 import { AuthResponse } from "@/types/auth";
 import { useAuthStore } from "../store/authStore";
 import { RegisterFormValues } from "../schemas/register-schema";
-import { useRouter } from "next/navigation";
+import { AxiosError } from "axios";
 
 /**
  * Servicio de Autenticación Centralizado.
@@ -19,22 +19,22 @@ export const authService = {
         try {
             setChecking(true);
             const { data } = await apiClient.get<AuthResponse>("/auth/me");
+            console.log("[AUTH_SERVICE] getMe raw response:", JSON.stringify(data));
 
             if (data?.user) {
                 setAuth(data.user);
                 logger.info("AUTH_SERVICE", `Sesión recuperada: ${data.user.email}`);
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
             clearAuth();
 
-            if (error.response?.status === 401) {
+            if (error instanceof AxiosError && error.response?.status === 401) {
                 logger.info("AUTH_SERVICE", "Navegación como invitado.");
-                // No hacemos throw, pero nos aseguramos de que el flujo termine aquí
                 return;
             }
 
-            logger.error("AUTH_SERVICE", "Fallo técnico", error.message);
-            // Solo lanzamos para errores que NO sean 401
+            const message = error instanceof AxiosError ? error.message : "Unknown error";
+            logger.error("AUTH_SERVICE", "Fallo técnico", message);
             throw error;
         } finally {
             // Garantizando liberación de UI.
@@ -61,8 +61,10 @@ export const authService = {
                 setAuth(data.user);
                 logger.info("AUTH_SERVICE", "Login exitoso y Store actualizado.");
             }
-        } catch (error: any) {
-            const errorMsg = error.response?.data?.message || "Error en el servidor";
+        } catch (error: unknown) {
+            const errorMsg = error instanceof AxiosError
+                ? error.response?.data?.message || "Error en el servidor"
+                : "Error en el servidor";
             logger.error("AUTH_SERVICE", "Fallo en el inicio de sesión", errorMsg);
             throw error;
         } finally {
@@ -75,7 +77,6 @@ export const authService = {
      */
     logout: async (): Promise<void> => {
         const { clearAuth, setChecking } = useAuthStore.getState();
-        // const router = useRouter();
 
         try {
             setChecking(true);
@@ -84,8 +85,9 @@ export const authService = {
             await apiClient.post("/auth/logout");
 
             logger.info("AUTH_SERVICE", "Cookie invalidada y sesión terminada.");
-        } catch (error: any) {
-            logger.error("AUTH_SERVICE", "Error al cerrar sesión en el servidor", error.message);
+        } catch (error: unknown) {
+            const message = error instanceof AxiosError ? error.message : "Unknown error";
+            logger.error("AUTH_SERVICE", "Error al cerrar sesión en el servidor", message);
         } finally {
             clearAuth();
             setChecking(false);
@@ -111,8 +113,10 @@ export const authService = {
                 setAuth(data.user);
                 logger.info("AUTH_SERVICE", "Registro exitoso y sesión iniciada");
             }
-        } catch (error: any) {
-            const errorMsg = error.response?.data?.message || "Error al intentar registrar a un usuario"
+        } catch (error: unknown) {
+            const errorMsg = error instanceof AxiosError
+                ? error.response?.data?.message || "Error al intentar registrar a un usuario"
+                : "Error al intentar registrar a un usuario";
             logger.error("AUTH_SERVICE", "Fallo en el registro de usuario", errorMsg);
 
             throw error;

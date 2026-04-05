@@ -1,6 +1,5 @@
 "use client";
 
-import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { useAuthStore } from "@/features/auth/store/authStore";
 import { logger } from "@/lib/logger";
 import { useRouter } from "next/navigation";

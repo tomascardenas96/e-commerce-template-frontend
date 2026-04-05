@@ -1,15 +1,18 @@
 import { AuthInitializer } from "@/features/auth/components/AuthInitializer";
-import { LogOutBtn } from "@/features/auth/components/LogOutBtn";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/landing/Footer";
+import { ToastProvider } from "@/components/ui/Toast";
 
-export default function mainLayout({
+export default function MainLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <ToastProvider>
+      <Navbar />
       <AuthInitializer>{children}</AuthInitializer>
-      <LogOutBtn />
-    </>
+      <Footer />
+    </ToastProvider>
   );
 }
