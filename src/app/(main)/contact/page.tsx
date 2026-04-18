@@ -7,8 +7,6 @@ export default function ContactPage() {
   const [formState, setFormState] = useState({
     name: "",
     email: "",
-    phone: "",
-    service: "",
     message: "",
   });
   const [submitted, setSubmitted] = useState(false);
@@ -17,7 +15,7 @@ export default function ContactPage() {
     e.preventDefault();
     setSubmitted(true);
     setTimeout(() => setSubmitted(false), 3000);
-    setFormState({ name: "", email: "", phone: "", service: "", message: "" });
+    setFormState({ name: "", email: "", message: "" });
   };
 
   return (
@@ -40,8 +38,8 @@ export default function ContactPage() {
             HABLEMOS.
           </h1>
           <p className="text-sm md:text-base text-muted max-w-md leading-relaxed">
-            Reservá tu turno, hacé una consulta o simplemente pasá a
-            conocernos. Estamos para vos.
+            Reservá tu turno, hacé una consulta o simplemente pasá a conocernos.
+            Estamos para vos.
           </p>
         </div>
       </section>
@@ -151,44 +149,6 @@ export default function ContactPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="group">
-                  <label className="block text-[0.6rem] tracking-[0.2em] text-muted uppercase mb-3 group-focus-within:text-white transition-colors">
-                    Teléfono
-                  </label>
-                  <input
-                    type="tel"
-                    value={formState.phone}
-                    onChange={(e) =>
-                      setFormState({ ...formState, phone: e.target.value })
-                    }
-                    className="w-full bg-transparent border-b border-white/10 py-3 text-sm text-white outline-none focus:border-white/40 transition-colors placeholder:text-muted/20"
-                    placeholder="+54 11 ..."
-                  />
-                </div>
-                <div className="group">
-                  <label className="block text-[0.6rem] tracking-[0.2em] text-muted uppercase mb-3 group-focus-within:text-white transition-colors">
-                    Servicio de interés
-                  </label>
-                  <select
-                    value={formState.service}
-                    onChange={(e) =>
-                      setFormState({ ...formState, service: e.target.value })
-                    }
-                    className="w-full bg-transparent border-b border-white/10 py-3 text-sm text-white outline-none focus:border-white/40 transition-colors appearance-none cursor-pointer [&>option]:bg-card [&>option]:text-white"
-                  >
-                    <option value="" className="text-muted">
-                      Seleccionar...
-                    </option>
-                    <option value="corte">Corte & Styling</option>
-                    <option value="color">Colorimetría</option>
-                    <option value="tratamiento">Tratamientos Capilares</option>
-                    <option value="skincare">Skincare</option>
-                    <option value="otro">Otro</option>
-                  </select>
-                </div>
-              </div>
-
               <div className="group">
                 <label className="block text-[0.6rem] tracking-[0.2em] text-muted uppercase mb-3 group-focus-within:text-white transition-colors">
                   Mensaje
@@ -263,13 +223,13 @@ export default function ContactPage() {
                 WhatsApp
               </p>
               <a
-                href="https://wa.me/541145678900"
+                href="https://wa.me/542281576513"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group flex items-center gap-2 text-white hover:text-muted transition-colors"
               >
                 <span className="text-sm tracking-[0.05em]">
-                  +54 11 4567-8900
+                  +54 2281 576513
                 </span>
                 <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
               </a>
@@ -280,7 +240,7 @@ export default function ContactPage() {
                 Turnos
               </p>
               <a
-                href="https://wa.me/541145678900?text=Hola%2C%20quiero%20reservar%20un%20turno"
+                href="https://wa.me/542281576513"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block border border-white/20 px-8 py-3 text-[0.65rem] tracking-[0.2em] text-white uppercase hover:bg-white hover:text-black transition-all"

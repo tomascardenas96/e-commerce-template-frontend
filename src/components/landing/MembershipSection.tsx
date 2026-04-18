@@ -1,6 +1,21 @@
+"use client";
+
+import { useState } from "react";
 import Logo from "../layout/Logo";
 
+const SERVICE_LABELS: Record<string, string> = {
+  "1": "Servicio 1",
+  "2": "Servicio 2",
+  "3": "Servicio 3",
+};
+
 export function MembershipSection() {
+  const [name, setName] = useState("");
+  const [service, setService] = useState("");
+
+  const whatsappMessage = `Hola! Soy ${name}, quiero reservar un turno para ${SERVICE_LABELS[service] ?? ""}.`;
+  const whatsappUrl = `https://wa.me/542281576513?text=${encodeURIComponent(whatsappMessage)}`;
+
   return (
     <section className="px-6 md:px-16 py-32 bg-background">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center max-w-6xl mx-auto">
@@ -30,7 +45,11 @@ export function MembershipSection() {
               <label className="block text-[10px] tracking-[0.3em] text-accent uppercase mb-2">
                 Servicio
               </label>
-              <select className="w-full bg-card border border-white/10 rounded-sm px-5 py-4 text-xs tracking-[0.15em] text-white appearance-none cursor-pointer focus:outline-none focus:border-accent transition-colors">
+              <select
+                value={service}
+                onChange={(e) => setService(e.target.value)}
+                className="w-full bg-card border border-white/10 rounded-sm px-5 py-4 text-xs tracking-[0.15em] text-white appearance-none cursor-pointer focus:outline-none focus:border-accent transition-colors"
+              >
                 <option value="">Seleccionar servicio</option>
                 <option value="1">Servicio 1</option>
                 <option value="2">Servicio 2</option>
@@ -59,28 +78,28 @@ export function MembershipSection() {
               </label>
               <input
                 type="text"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 placeholder="Tu nombre"
                 className="w-full bg-card border border-white/10 rounded-sm px-5 py-4 text-xs tracking-[0.15em] text-white placeholder:text-muted focus:outline-none focus:border-accent transition-colors"
               />
             </div>
 
-            <div>
-              <label className="block text-[10px] tracking-[0.3em] text-accent uppercase mb-2">
-                Teléfono
-              </label>
-              <input
-                type="tel"
-                placeholder="Tu teléfono"
-                className="w-full bg-card border border-white/10 rounded-sm px-5 py-4 text-xs tracking-[0.15em] text-white placeholder:text-muted focus:outline-none focus:border-accent transition-colors"
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="w-full mt-8 bg-accent text-background px-10 py-5 text-xs tracking-[0.25em] uppercase font-medium hover:bg-white transition-colors cursor-pointer"
-            >
-              Reservar turno
-            </button>
+            {name.trim() && service ? (
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full mt-8 bg-accent text-background px-10 py-5 text-xs tracking-[0.25em] uppercase font-medium hover:bg-white transition-colors cursor-pointer text-center"
+              >
+                Reservar turno
+              </a>
+            ) : (
+              <span className="block w-full mt-8 bg-accent/30 text-muted px-10 py-5 text-xs tracking-[0.25em] uppercase font-medium cursor-not-allowed text-center">
+                Completá los campos para reservar
+              </span>
+            )}
           </form>
         </div>
       </div>

@@ -89,10 +89,10 @@ export const authService = {
             const message = error instanceof AxiosError ? error.message : "Unknown error";
             logger.error("AUTH_SERVICE", "Error al cerrar sesión en el servidor", message);
         } finally {
-            clearAuth();
-            setChecking(false);
-            // Forzamos recarga para limpiar cualquier estado residual de la memoria
-            // router.push("/login");
+            // Limpiamos el storage persistido directamente para evitar que
+            // clearAuth() dispare un re-render que muestre "Ingresar" antes
+            // de que el navegador complete la redirección.
+            localStorage.removeItem("auth-storage");
             window.location.href = "/login";
         }
     },

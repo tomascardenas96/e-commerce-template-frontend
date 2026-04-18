@@ -16,7 +16,7 @@ export function CtaSection() {
           Envianos un mensaje y te responderemos a la brevedad.
         </p>
         <a
-          href="https://wa.me/5492281378525"
+          href="https://wa.me/5492281576513"
           className="inline-block border border-accent bg-accent text-black px-14 py-5 text-xs tracking-[0.25em] font-medium hover:bg-transparent hover:text-accent transition-all"
         >
           ENVIAR WHATSAPP
