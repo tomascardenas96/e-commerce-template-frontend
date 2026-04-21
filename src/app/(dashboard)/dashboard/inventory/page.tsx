@@ -7,6 +7,7 @@ import { StatusBadge } from "@/features/dashboard/components/StatusBadge";
 import { products } from "@/features/dashboard/data/products.data";
 import type { Product, Column } from "@/features/dashboard/types/dashboard.types";
 import { Search } from "lucide-react";
+import Link from "next/link";
 
 const columns: Column<Product>[] = [
   {
@@ -63,9 +64,12 @@ export default function InventoryPage() {
         title="Inventory"
         subtitle="Product Management"
         actions={
-          <button className="px-5 py-2.5 bg-white text-black text-xs tracking-[0.15em] uppercase hover:bg-white/90 transition-colors rounded-sm">
+          <Link
+            href="/dashboard/inventory/new"
+            className="px-5 py-2.5 bg-white text-black text-xs tracking-[0.15em] uppercase hover:bg-white/90 transition-colors rounded-sm"
+          >
             Add Product
-          </button>
+          </Link>
         }
       />
 
