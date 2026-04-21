@@ -1,23 +1,45 @@
 "use client";
 
-import Image from "next/image";
+import { useEffect } from "react";
+import Link from "next/link";
 import { useCartStore } from "@/features/cart/store/cartStore";
-import { ShieldCheck, Truck, X } from "lucide-react";
-
-const TAX_RATE = 0.08;
+import { cartService } from "@/features/cart/services/cartService";
+import { ShieldCheck, Truck, X, Loader2 } from "lucide-react";
+import { useAuthStore } from "@/features/auth/store/authStore";
 
 export default function CartPage() {
-  const items = useCartStore((s) => s.items);
-  const removeItem = useCartStore((s) => s.removeItem);
-  const updateQuantity = useCartStore((s) => s.updateQuantity);
+  const cart = useCartStore((s) => s.cart);
+  const isLoading = useCartStore((s) => s.isLoading);
+  const error = useCartStore((s) => s.error);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      cartService.getCart();
+    }
+  }, [isAuthenticated]);
+
+  const items = cart?.items ?? [];
   const itemCount = items.reduce((sum, i) => sum + i.quantity, 0);
-  const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
-  const taxEstimate = subtotal * TAX_RATE;
-  const total = subtotal + taxEstimate;
+  const subtotal = items.reduce((sum, i) => sum + i.unitPrice * i.quantity, 0);
+
+  const handleUpdateQuantity = async (itemId: string, quantity: number) => {
+    if (quantity <= 0) {
+      await cartService.removeItem(itemId);
+    } else {
+      await cartService.updateItemQuantity(itemId, quantity);
+    }
+  };
+
+  const handleRemoveItem = async (itemId: string) => {
+    await cartService.removeItem(itemId);
+  };
+
+  const formatAttributes = (attrs: Record<string, string>) =>
+    Object.values(attrs).join(" / ");
 
   return (
-    <main className="min-h-screen bg-background pt-28 pb-20">
+    <main className="min-h-screen bg-background pt-40 pb-20">
       {/* Header */}
       <section className="px-6 md:px-20 lg:px-32 mb-12">
         <h1 className="heading-display text-5xl md:text-7xl lg:text-8xl text-white mb-3">
@@ -30,11 +52,39 @@ export default function CartPage() {
 
       {/* Content */}
       <section className="px-6 md:px-20 lg:px-32">
-        {items.length === 0 ? (
+        {!isAuthenticated ? (
           <div className="text-center py-20">
+            <p className="text-muted text-sm tracking-[0.1em] uppercase mb-6">
+              Inicia sesion para ver tu carrito
+            </p>
+            <Link
+              href="/login"
+              className="inline-block border border-white/20 px-10 py-4 text-[0.65rem] tracking-[0.2em] text-white uppercase hover:bg-white hover:text-black transition-all"
+            >
+              Iniciar sesion
+            </Link>
+          </div>
+        ) : isLoading && !cart ? (
+          <div className="flex items-center justify-center py-20">
+            <Loader2 className="w-6 h-6 text-muted animate-spin" />
+          </div>
+        ) : error && !cart ? (
+          <div className="text-center py-20">
+            <p className="text-red-400 text-sm tracking-[0.1em] uppercase">
+              {error}
+            </p>
+          </div>
+        ) : items.length === 0 ? (
+          <div className="text-center py-34 flex justify-center items-center gap-6">
             <p className="text-muted text-sm tracking-[0.1em] uppercase">
               Tu carrito esta vacio
             </p>
+            <Link
+              href="/catalogue"
+              className="inline-block border border-white/20 px-10 py-4 text-[0.65rem] tracking-[0.2em] text-white uppercase hover:bg-white hover:text-black transition-all"
+            >
+              Explorar catalogo
+            </Link>
           </div>
         ) : (
           <div className="flex flex-col lg:flex-row gap-12">
@@ -44,29 +94,27 @@ export default function CartPage() {
                 <div key={item.id}>
                   {index > 0 && <div className="border-t border-white/10" />}
                   <div className="py-8 flex gap-6">
-                    {/* Product Image */}
-                    <div className="relative w-36 h-44 shrink-0 overflow-hidden">
-                      <Image
-                        src={item.image}
-                        alt={item.name}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-
                     {/* Product Info */}
                     <div className="flex-1 flex flex-col justify-between">
                       <div className="flex items-start justify-between">
                         <div>
                           <h3 className="text-sm md:text-base font-semibold tracking-[0.1em] text-white uppercase">
-                            {item.name}
+                            {item.variant.sku}
                           </h3>
                           <p className="text-xs tracking-[0.1em] text-muted uppercase mt-1">
-                            {item.description}
+                            {formatAttributes(item.variant.attributes)}
                           </p>
+                          {item.unitPrice !== item.variant.price && (
+                            <p className="text-[0.6rem] tracking-[0.1em] text-accent mt-1">
+                              Precio actual: $
+                              {item.variant.price.toLocaleString("en-US", {
+                                minimumFractionDigits: 2,
+                              })}
+                            </p>
+                          )}
                         </div>
                         <button
-                          onClick={() => removeItem(item.id)}
+                          onClick={() => handleRemoveItem(item.id)}
                           className="text-muted hover:text-white transition-colors cursor-pointer"
                         >
                           <X className="w-4 h-4" />
@@ -78,7 +126,7 @@ export default function CartPage() {
                         <div className="flex items-center gap-4 select-none">
                           <button
                             onClick={() =>
-                              updateQuantity(item.id, item.quantity - 1)
+                              handleUpdateQuantity(item.id, item.quantity - 1)
                             }
                             className="text-[0.65rem] tracking-[0.15em] text-muted hover:text-white transition-colors cursor-pointer uppercase"
                           >
@@ -89,18 +137,26 @@ export default function CartPage() {
                           </span>
                           <button
                             onClick={() =>
-                              updateQuantity(item.id, item.quantity + 1)
+                              handleUpdateQuantity(item.id, item.quantity + 1)
                             }
-                            className="text-[0.65rem] tracking-[0.15em] text-muted hover:text-white transition-colors cursor-pointer uppercase"
+                            disabled={item.quantity >= item.variant.stock}
+                            className="text-[0.65rem] tracking-[0.15em] text-muted hover:text-white transition-colors cursor-pointer uppercase disabled:opacity-30 disabled:cursor-not-allowed"
                           >
                             Más
                           </button>
                         </div>
 
+                        {/* Stock indicator */}
+                        {item.variant.stock <= 3 && (
+                          <span className="text-[0.6rem] tracking-[0.1em] text-accent uppercase">
+                            {item.variant.stock} disponibles
+                          </span>
+                        )}
+
                         {/* Price */}
                         <p className="text-base md:text-lg text-white font-light">
                           $
-                          {(item.price * item.quantity).toLocaleString(
+                          {(item.unitPrice * item.quantity).toLocaleString(
                             "en-US",
                             { minimumFractionDigits: 2 },
                           )}
@@ -117,7 +173,7 @@ export default function CartPage() {
             <div className="w-full lg:w-80 shrink-0">
               <div className="bg-card p-8">
                 <h2 className="text-[0.7rem] tracking-[0.25em] text-white uppercase font-semibold mb-8">
-                  Order Summary
+                  Resumen del Pedido
                 </h2>
 
                 <div className="space-y-4 text-sm">
@@ -134,21 +190,10 @@ export default function CartPage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-[0.7rem] tracking-[0.15em] text-muted uppercase">
-                      Shipping
+                      Envio
                     </span>
                     <span className="text-[0.7rem] tracking-[0.1em] text-white uppercase font-medium">
-                      Complimentary
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-[0.7rem] tracking-[0.15em] text-muted uppercase">
-                      Tax Estimate
-                    </span>
-                    <span className="text-white">
-                      $
-                      {taxEstimate.toLocaleString("en-US", {
-                        minimumFractionDigits: 2,
-                      })}
+                      Gratis
                     </span>
                   </div>
                 </div>
@@ -161,40 +206,31 @@ export default function CartPage() {
                   </span>
                   <span className="text-2xl md:text-3xl text-white font-light">
                     $
-                    {total.toLocaleString("en-US", {
+                    {subtotal.toLocaleString("en-US", {
                       minimumFractionDigits: 2,
                     })}
                   </span>
                 </div>
 
-                <button className="w-full bg-white text-black py-4 text-[0.65rem] tracking-[0.2em] uppercase font-semibold hover:bg-foreground transition-colors cursor-pointer">
-                  Proceed to Checkout
-                </button>
-
-                {/* Promo Code */}
-                <div className="mt-6 flex items-center border-b border-white/10 pb-2">
-                  <input
-                    type="text"
-                    placeholder="PROMO CODE"
-                    className="flex-1 bg-transparent text-[0.65rem] tracking-[0.15em] text-muted uppercase placeholder:text-muted/50 outline-none"
-                  />
-                  <button className="text-[0.65rem] tracking-[0.15em] text-white uppercase font-medium hover:text-muted transition-colors cursor-pointer">
-                    Apply
-                  </button>
-                </div>
+                <Link
+                  href="/checkout"
+                  className="block w-full bg-white text-black py-4 text-[0.65rem] tracking-[0.2em] uppercase font-semibold hover:bg-foreground transition-colors cursor-pointer text-center"
+                >
+                  Finalizar compra
+                </Link>
 
                 {/* Trust Badges */}
                 <div className="mt-8 space-y-3">
                   <div className="flex items-center gap-3">
                     <ShieldCheck className="w-4 h-4 text-muted" />
                     <span className="text-[0.6rem] tracking-[0.1em] text-muted uppercase">
-                      Secure Encrypted Checkout
+                      Pago seguro y encriptado
                     </span>
                   </div>
                   <div className="flex items-center gap-3">
                     <Truck className="w-4 h-4 text-muted" />
                     <span className="text-[0.6rem] tracking-[0.1em] text-muted uppercase">
-                      Insured Global Delivery
+                      Envio asegurado a todo el pais
                     </span>
                   </div>
                 </div>
