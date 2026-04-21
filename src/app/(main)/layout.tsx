@@ -10,9 +10,11 @@ export default function MainLayout({
 }) {
   return (
     <ToastProvider>
-      <Navbar />
-      <AuthInitializer>{children}</AuthInitializer>
-      <Footer />
+      <AuthInitializer>
+        <Navbar />
+        {children}
+        <Footer />
+      </AuthInitializer>
     </ToastProvider>
   );
 }

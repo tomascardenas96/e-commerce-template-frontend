@@ -1,5 +1,6 @@
 "use client";
 
+import { MessageCircleWarningIcon } from "lucide-react";
 import { useState } from "react";
 import Logo from "../layout/Logo";
 
@@ -37,6 +38,10 @@ export function MembershipSection() {
           <p className="text-sm text-muted leading-relaxed max-w-md">
             Elegí el servicio que deseas y encontrá el momento perfecto para
             vos. Seleccioná el servicio deseado de la lista y reservá un turno.
+          </p>
+          <p className="text-sm text-accent leading-relaxed max-w-md flex items-center gap-2">
+            <MessageCircleWarningIcon className="inline-block w-5" /> Turnos
+            solo disponibles para Benito Juarez, Argentina.
           </p>
 
           {/* Formulario de reserva */}

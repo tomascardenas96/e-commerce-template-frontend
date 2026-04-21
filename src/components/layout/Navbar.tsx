@@ -3,7 +3,15 @@
 import { useAuthStore } from "@/features/auth/store/authStore";
 import { authService } from "@/features/auth/services/authService";
 import { useCartStore } from "@/features/cart/store/cartStore";
-import { ChevronRight, LogOut, ShoppingBag, User } from "lucide-react";
+import { cartService } from "@/features/cart/services/cartService";
+import {
+  ChevronRight,
+  LayoutDashboard,
+  LogOut,
+  Package,
+  ShoppingBag,
+  User,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
@@ -22,8 +30,9 @@ export function Navbar() {
   const pathname = usePathname();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const user = useAuthStore((s) => s.user);
-  const cartItems = useCartStore((s) => s.items);
-  const cartCount = cartItems.reduce((sum, i) => sum + i.quantity, 0);
+  const isAdmin = user?.role?.name?.toUpperCase() === "ADMIN";
+  const cart = useCartStore((s) => s.cart);
+  const cartCount = cart?.items.reduce((sum, i) => sum + i.quantity, 0) ?? 0;
   const [isFixed, setIsFixed] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [hydrated, setHydrated] = useState(false);
@@ -42,8 +51,10 @@ export function Navbar() {
   }, []);
 
   useEffect(() => {
-    console.log("[Navbar] hydrated:", hydrated, "isAuthenticated:", isAuthenticated, "user:", user);
-  }, [hydrated, isAuthenticated, user]);
+    if (hydrated && isAuthenticated) {
+      cartService.getCart();
+    }
+  }, [hydrated, isAuthenticated]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -123,7 +134,8 @@ export function Navbar() {
             >
               <div className="w-8 h-8 rounded-full bg-accent/20 border border-accent/40 flex items-center justify-center">
                 <span className="text-xs font-semibold text-accent uppercase">
-                  {user.name?.charAt(0)}{user.lastname?.charAt(0)}
+                  {user.name?.charAt(0)}
+                  {user.lastname?.charAt(0)}
                 </span>
               </div>
               <span className="hidden md:block text-xs tracking-wide font-medium max-w-[120px] truncate">
@@ -137,17 +149,29 @@ export function Navbar() {
                   <p className="text-sm font-medium text-white truncate">
                     {user.name} {user.lastname}
                   </p>
-                  <p className="text-xs text-neutral-400 truncate">{user.email}</p>
+                  <p className="text-xs text-neutral-400 truncate">
+                    {user.email}
+                  </p>
                 </div>
 
                 <div className="py-1">
+                  {isAdmin && (
+                    <Link
+                      href="/dashboard"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-2 px-4 py-2 text-xs text-accent hover:bg-white/10 transition-colors"
+                    >
+                      <LayoutDashboard className="w-3.5 h-3.5" />
+                      Dashboard
+                    </Link>
+                  )}
                   <Link
-                    href="/dashboard"
+                    href="/orders"
                     onClick={() => setMenuOpen(false)}
                     className="flex items-center gap-2 px-4 py-2 text-xs text-neutral-300 hover:bg-white/10 hover:text-white transition-colors"
                   >
-                    <User className="w-3.5 h-3.5" />
-                    Mi cuenta
+                    <Package className="w-3.5 h-3.5" />
+                    Mis pedidos
                   </Link>
                   <button
                     onClick={handleLogout}
@@ -163,7 +187,7 @@ export function Navbar() {
         ) : (
           <Link
             href="/login"
-            className="text-xs tracking-[0.2em] text-white hover:text-muted transition-colors flex items-center gap-1"
+            className="text-xs tracking-widest text-white hover:text-muted transition-colors flex items-center gap-1"
           >
             INGRESAR
             <ChevronRight className="w-4 h-4 text-accent" />
