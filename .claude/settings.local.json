@@ -15,7 +15,9 @@
       "Bash(npx --yes playwright test --list)",
       "Bash(npm install:*)",
       "Bash(npx tsc:*)",
-      "Bash(node -e \"const l = require\\('lucide-react'\\); const names = Object.keys\\(l\\).filter\\(k => k.toLowerCase\\(\\).includes\\('instagram'\\)\\); console.log\\(names\\);\")"
+      "Bash(node -e \"const l = require\\('lucide-react'\\); const names = Object.keys\\(l\\).filter\\(k => k.toLowerCase\\(\\).includes\\('instagram'\\)\\); console.log\\(names\\);\")",
+      "Bash(npx eslint *)",
+      "Bash(git add *)"
     ]
   }
 }
