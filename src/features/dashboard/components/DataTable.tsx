@@ -6,9 +6,10 @@ interface DataTableProps<T> {
   columns: Column<T>[];
   data: T[];
   keyExtractor: (item: T) => string;
+  onRowClick?: (item: T) => void;
 }
 
-export function DataTable<T>({ columns, data, keyExtractor }: DataTableProps<T>) {
+export function DataTable<T>({ columns, data, keyExtractor, onRowClick }: DataTableProps<T>) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full">
@@ -28,7 +29,10 @@ export function DataTable<T>({ columns, data, keyExtractor }: DataTableProps<T>)
           {data.map((item) => (
             <tr
               key={keyExtractor(item)}
-              className="border-b border-white/5 hover:bg-card-light/50 transition-colors"
+              onClick={() => onRowClick?.(item)}
+              className={`border-b border-white/5 hover:bg-card-light/50 transition-colors ${
+                onRowClick ? "cursor-pointer" : ""
+              }`}
             >
               {columns.map((col) => (
                 <td key={String(col.key)} className="py-3 px-4 text-sm text-white/80">

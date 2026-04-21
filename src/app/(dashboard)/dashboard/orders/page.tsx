@@ -1,29 +1,49 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { DashboardHeader } from "@/features/dashboard/components/DashboardHeader";
 import { DataTable } from "@/features/dashboard/components/DataTable";
 import { StatusBadge } from "@/features/dashboard/components/StatusBadge";
-import { orders } from "@/features/dashboard/data/orders.data";
-import type { Order, OrderStatus, Column } from "@/features/dashboard/types/dashboard.types";
+import { useAdminOrdersStore } from "@/features/admin-orders/store/adminOrdersStore";
+import { adminOrdersService } from "@/features/admin-orders/services/adminOrdersService";
+import type {
+  AdminOrder,
+  AdminOrderStatus,
+} from "@/features/admin-orders/types/state.types";
+import type { Column } from "@/features/dashboard/types/dashboard.types";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const tabs: { label: string; value: OrderStatus | "all" }[] = [
+const LIMIT = 10;
+
+const tabs: { label: string; value: AdminOrderStatus | "all" }[] = [
   { label: "All", value: "all" },
   { label: "Pending", value: "pending" },
-  { label: "Processing", value: "processing" },
+  { label: "Paid", value: "paid" },
   { label: "Shipped", value: "shipped" },
   { label: "Delivered", value: "delivered" },
   { label: "Cancelled", value: "cancelled" },
 ];
 
-const columns: Column<Order>[] = [
-  { key: "id", label: "Order ID", render: (item) => <span className="font-medium">{item.id}</span> },
-  { key: "customer", label: "Customer" },
-  { key: "items", label: "Items" },
+const columns: Column<AdminOrder>[] = [
   {
-    key: "total",
-    label: "Total",
-    render: (item) => `$${item.total.toLocaleString("en-US")}`,
+    key: "orderNumber",
+    label: "Order",
+    render: (item) => (
+      <span className="font-medium text-white">{item.orderNumber}</span>
+    ),
+  },
+  {
+    key: "customer",
+    label: "Customer",
+    render: (item) => (
+      <div>
+        <div className="text-white/90">
+          {item.user.name} {item.user.lastname}
+        </div>
+        <div className="text-xs text-muted">{item.user.email}</div>
+      </div>
+    ),
   },
   {
     key: "status",
@@ -31,10 +51,19 @@ const columns: Column<Order>[] = [
     render: (item) => <StatusBadge status={item.status} />,
   },
   {
-    key: "date",
+    key: "totalAmount",
+    label: "Total",
+    render: (item) => (
+      <span className="font-medium">
+        ${item.totalAmount.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+      </span>
+    ),
+  },
+  {
+    key: "createdAt",
     label: "Date",
     render: (item) =>
-      new Date(item.date).toLocaleDateString("en-US", {
+      new Date(item.createdAt).toLocaleDateString("en-US", {
         year: "numeric",
         month: "short",
         day: "numeric",
@@ -43,12 +72,27 @@ const columns: Column<Order>[] = [
 ];
 
 export default function OrdersPage() {
-  const [activeTab, setActiveTab] = useState<OrderStatus | "all">("all");
+  const router = useRouter();
+  const [activeTab, setActiveTab] = useState<AdminOrderStatus | "all">("all");
+  const [offset, setOffset] = useState(0);
+  const { orders, total, isLoading, error } = useAdminOrdersStore();
 
-  const filtered =
-    activeTab === "all"
-      ? orders
-      : orders.filter((o) => o.status === activeTab);
+  useEffect(() => {
+    const query: { limit: number; offset: number; status?: AdminOrderStatus } = {
+      limit: LIMIT,
+      offset,
+    };
+    if (activeTab !== "all") query.status = activeTab;
+    adminOrdersService.getOrders(query);
+  }, [activeTab, offset]);
+
+  const handleTabChange = (value: AdminOrderStatus | "all") => {
+    setActiveTab(value);
+    setOffset(0);
+  };
+
+  const totalPages = Math.ceil(total / LIMIT);
+  const currentPage = Math.floor(offset / LIMIT) + 1;
 
   return (
     <div className="max-w-[1400px]">
@@ -59,7 +103,7 @@ export default function OrdersPage() {
         {tabs.map((tab) => (
           <button
             key={tab.value}
-            onClick={() => setActiveTab(tab.value)}
+            onClick={() => handleTabChange(tab.value)}
             className={`px-4 py-2 text-xs tracking-[0.1em] uppercase rounded-sm transition-colors whitespace-nowrap ${
               activeTab === tab.value
                 ? "bg-card-light text-white"
@@ -71,13 +115,62 @@ export default function OrdersPage() {
         ))}
       </div>
 
+      {/* Error */}
+      {error && (
+        <div className="mb-4 px-4 py-3 bg-danger/10 border border-danger/20 rounded-sm text-danger text-sm">
+          {error}
+        </div>
+      )}
+
+      {/* Table */}
       <div className="bg-card rounded-sm">
-        <DataTable
-          columns={columns}
-          data={filtered}
-          keyExtractor={(item) => item.id}
-        />
+        {isLoading ? (
+          <div className="flex items-center justify-center py-20">
+            <div className="w-5 h-5 border-2 border-accent border-t-transparent rounded-full animate-spin" />
+          </div>
+        ) : orders.length === 0 ? (
+          <div className="text-center py-20 text-muted text-sm">
+            No orders found
+          </div>
+        ) : (
+          <DataTable
+            columns={columns}
+            data={orders}
+            keyExtractor={(item) => item.id}
+            onRowClick={(item) =>
+              router.push(`/dashboard/orders/${item.id}`)
+            }
+          />
+        )}
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between mt-4 text-sm text-muted">
+          <span>
+            Showing {offset + 1}–{Math.min(offset + LIMIT, total)} of {total}
+          </span>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setOffset(Math.max(0, offset - LIMIT))}
+              disabled={offset === 0}
+              className="p-1.5 rounded-sm hover:bg-card-light disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            >
+              <ChevronLeft size={16} />
+            </button>
+            <span className="text-white/80">
+              {currentPage} / {totalPages}
+            </span>
+            <button
+              onClick={() => setOffset(offset + LIMIT)}
+              disabled={offset + LIMIT >= total}
+              className="p-1.5 rounded-sm hover:bg-card-light disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            >
+              <ChevronRight size={16} />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
