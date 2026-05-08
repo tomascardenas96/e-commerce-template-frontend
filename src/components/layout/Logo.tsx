@@ -26,7 +26,7 @@ export default function Logo({
     >
       <span
         className={`${pinyonScript.className} ${pinyonScript.variable} font-bold transition-all duration-500 ease-in-out ${
-          size === "large" ? "text-[5rem]" : "text-[2.1rem]"
+          size === "large" ? "text-[5rem]" : "text-[1.9rem]"
         } ${color === "light" ? "text-white" : "text-[#3d3d3d]"}`}
       >
         Lola
@@ -36,7 +36,7 @@ export default function Logo({
           className={`transition-all duration-500 ease-in-out  ${
             size === "large"
               ? "text-[1.6rem] mt-[-1.6rem] font-thin"
-              : "text-[.6rem] mt-[-.5rem] font-bold"
+              : "text-[.6rem] mt-[-.3rem] font-light"
           } ${color === "dark" ? "text-[#3d3d3d]" : "text-accent"}`}
         >
           CENTRO DE ESTÉTICA

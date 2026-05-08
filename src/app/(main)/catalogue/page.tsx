@@ -5,6 +5,7 @@ import Image from "next/image";
 import { cartService } from "@/features/cart/services/cartService";
 import { productsService } from "@/features/products/services/productsService";
 import { useProductsStore } from "@/features/products/store/productsStore";
+import { useAuthStore } from "@/features/auth/store/authStore";
 import { useToast } from "@/components/ui/Toast";
 
 const ALL_ITEMS = "ALL ITEMS" as const;
@@ -17,6 +18,7 @@ const formatPrice = (price: string | number) => {
 
 export default function CataloguePage() {
   const { products, isLoading, error } = useProductsStore();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const [activeFilter, setActiveFilter] = useState<string>(ALL_ITEMS);
   const { showToast } = useToast();
   const [addingId, setAddingId] = useState<string | null>(null);
@@ -132,6 +134,12 @@ export default function CataloguePage() {
                       onClick={async (e) => {
                         e.stopPropagation();
                         if (!variant) return;
+                        if (!isAuthenticated) {
+                          showToast(
+                            "Debes iniciar sesión para agregar productos al carrito",
+                          );
+                          return;
+                        }
                         setAddingId(product.id);
                         try {
                           await cartService.addItem(variant.id, 1);

@@ -24,7 +24,7 @@ export function HeroSection() {
           <div className="w-8 h-px bg-accent" />
         </div>
 
-        <h1 className="heading-display text-5xl md:text-7xl lg:text-9xl text-white mb-16 break-words">
+        <h1 className="heading-display text-5xl md:text-7xl lg:text-8xl text-white mb-16 wrap-break-word">
           EL ARTE DE LA
           <br />
           TRANSFORMACIÓN.

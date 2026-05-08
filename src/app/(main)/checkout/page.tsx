@@ -102,12 +102,12 @@ export default function CheckoutPage() {
       <main className="min-h-screen bg-background pt-28 pb-20">
         <section className="px-6 md:px-20 lg:px-32">
           <div className="text-center py-20">
-            <p className="text-muted text-sm tracking-[0.1em] uppercase mb-6">
+            <p className="text-muted text-sm tracking-widest uppercase mb-6">
               Inicia sesion para continuar
             </p>
             <Link
               href="/login"
-              className="inline-block border border-white/20 px-10 py-4 text-[0.65rem] tracking-[0.2em] text-white uppercase hover:bg-white hover:text-black transition-all"
+              className="inline-block border border-white/20 px-10 py-4 text-[0.65rem] tracking-widest text-white uppercase hover:bg-white hover:text-black transition-all"
             >
               Iniciar sesion
             </Link>
@@ -128,20 +128,20 @@ export default function CheckoutPage() {
           <ArrowLeft className="w-4 h-4" />
           Volver al carrito
         </Link>
-        <h1 className="heading-display text-5xl md:text-7xl lg:text-8xl text-white mb-3">
-          CHECKOUT
+        <h1 className="heading-display text-5xl md:text-5xl lg:text-6xl text-white mb-3">
+          PROCEDER CON LA COMPRA
         </h1>
       </section>
 
       {items.length === 0 ? (
         <section className="px-6 md:px-20 lg:px-32">
           <div className="text-center py-20">
-            <p className="text-muted text-sm tracking-[0.1em] uppercase mb-6">
+            <p className="text-muted text-sm tracking-widest uppercase mb-6">
               Tu carrito esta vacio
             </p>
             <Link
               href="/catalogue"
-              className="inline-block border border-white/20 px-10 py-4 text-[0.65rem] tracking-[0.2em] text-white uppercase hover:bg-white hover:text-black transition-all"
+              className="inline-block border border-white/20 px-10 py-4 text-[0.65rem] tracking-widest text-white uppercase hover:bg-white hover:text-black transition-all"
             >
               Explorar catalogo
             </Link>
@@ -151,7 +151,7 @@ export default function CheckoutPage() {
         <section className="px-6 md:px-20 lg:px-32">
           <form
             onSubmit={handleCheckout}
-            className="flex flex-col lg:flex-row gap-12"
+            className="flex flex-col lg:flex-row gap-40"
           >
             {/* Form */}
             <div className="flex-1 space-y-10">
@@ -188,7 +188,7 @@ export default function CheckoutPage() {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-xs text-muted tracking-[0.1em] uppercase">
+                  <p className="text-xs text-muted tracking-widest uppercase">
                     No tienes direcciones guardadas. Agrega una desde tu perfil.
                   </p>
                 )}
@@ -265,9 +265,7 @@ export default function CheckoutPage() {
               </div>
 
               {error && (
-                <p className="text-red-400 text-xs tracking-[0.1em]">
-                  {error}
-                </p>
+                <p className="text-red-400 text-xs tracking-widest">{error}</p>
               )}
             </div>
 

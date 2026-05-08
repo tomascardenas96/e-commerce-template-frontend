@@ -54,12 +54,12 @@ export default function CartPage() {
       <section className="px-6 md:px-20 lg:px-32">
         {!isAuthenticated ? (
           <div className="text-center py-20">
-            <p className="text-muted text-sm tracking-[0.1em] uppercase mb-6">
+            <p className="text-muted text-sm tracking-widest uppercase mb-6">
               Inicia sesion para ver tu carrito
             </p>
             <Link
               href="/login"
-              className="inline-block border border-white/20 px-10 py-4 text-[0.65rem] tracking-[0.2em] text-white uppercase hover:bg-white hover:text-black transition-all"
+              className="inline-block border border-white/20 px-10 py-4 text-[0.65rem] tracking-widest text-white uppercase hover:bg-white hover:text-black transition-all"
             >
               Iniciar sesion
             </Link>
@@ -70,13 +70,13 @@ export default function CartPage() {
           </div>
         ) : error && !cart ? (
           <div className="text-center py-20">
-            <p className="text-red-400 text-sm tracking-[0.1em] uppercase">
+            <p className="text-red-400 text-sm tracking-widest uppercase">
               {error}
             </p>
           </div>
         ) : items.length === 0 ? (
           <div className="text-center py-34 flex justify-center items-center gap-6">
-            <p className="text-muted text-sm tracking-[0.1em] uppercase">
+            <p className="text-muted text-sm tracking-widest uppercase">
               Tu carrito esta vacio
             </p>
             <Link
@@ -87,7 +87,7 @@ export default function CartPage() {
             </Link>
           </div>
         ) : (
-          <div className="flex flex-col lg:flex-row gap-12">
+          <div className="flex flex-col lg:flex-row gap-40">
             {/* Cart Items */}
             <div className="flex-1">
               {items.map((item, index) => (
@@ -98,14 +98,14 @@ export default function CartPage() {
                     <div className="flex-1 flex flex-col justify-between">
                       <div className="flex items-start justify-between">
                         <div>
-                          <h3 className="text-sm md:text-base font-semibold tracking-[0.1em] text-white uppercase">
+                          <h3 className="text-sm md:text-base font-semibold tracking-widest` text-white uppercase">
                             {item.variant.sku}
                           </h3>
-                          <p className="text-xs tracking-[0.1em] text-muted uppercase mt-1">
+                          <p className="text-xs tracking-widest` text-muted uppercase mt-1">
                             {formatAttributes(item.variant.attributes)}
                           </p>
                           {item.unitPrice !== item.variant.price && (
-                            <p className="text-[0.6rem] tracking-[0.1em] text-accent mt-1">
+                            <p className="text-[0.6rem] tracking-widest` text-accent mt-1">
                               Precio actual: $
                               {item.variant.price.toLocaleString("en-US", {
                                 minimumFractionDigits: 2,
@@ -148,7 +148,7 @@ export default function CartPage() {
 
                         {/* Stock indicator */}
                         {item.variant.stock <= 3 && (
-                          <span className="text-[0.6rem] tracking-[0.1em] text-accent uppercase">
+                          <span className="text-[0.6rem] tracking-widest text-accent uppercase">
                             {item.variant.stock} disponibles
                           </span>
                         )}
@@ -192,7 +192,7 @@ export default function CartPage() {
                     <span className="text-[0.7rem] tracking-[0.15em] text-muted uppercase">
                       Envio
                     </span>
-                    <span className="text-[0.7rem] tracking-[0.1em] text-white uppercase font-medium">
+                    <span className="text-[0.7rem] tracking-widest text-white uppercase font-medium">
                       Gratis
                     </span>
                   </div>
@@ -223,13 +223,13 @@ export default function CartPage() {
                 <div className="mt-8 space-y-3">
                   <div className="flex items-center gap-3">
                     <ShieldCheck className="w-4 h-4 text-muted" />
-                    <span className="text-[0.6rem] tracking-[0.1em] text-muted uppercase">
+                    <span className="text-[0.6rem] tracking-widest text-muted uppercase">
                       Pago seguro y encriptado
                     </span>
                   </div>
                   <div className="flex items-center gap-3">
                     <Truck className="w-4 h-4 text-muted" />
-                    <span className="text-[0.6rem] tracking-[0.1em] text-muted uppercase">
+                    <span className="text-[0.6rem] tracking-widest text-muted uppercase">
                       Envio asegurado a todo el pais
                     </span>
                   </div>

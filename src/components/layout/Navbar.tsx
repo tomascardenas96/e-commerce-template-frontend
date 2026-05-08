@@ -83,10 +83,10 @@ export function Navbar() {
 
   return (
     <nav
-      className={`left-0 right-0 z-50 flex items-center justify-between backdrop-blur-sm transition-[padding,background-color] duration-500 ease-in-out ${
+      className={`left-0 right-0 z-50 flex items-center justify-between  transition-[padding,background-color] duration-500 ease-in-out ${
         isFixed
-          ? "fixed top-0 animate-navbar-slide-down md:px-22 bg-black/15 py-5"
-          : "absolute top-0 animate-navbar-slide-up md:px-40 bg-black/30 py-4"
+          ? "fixed top-0 animate-navbar-slide-down md:px-22 bg-black/15 py-5 backdrop-blur-sm"
+          : "absolute top-0 animate-navbar-slide-up md:px-40 bg-transparent py-4"
       }`}
     >
       <Link

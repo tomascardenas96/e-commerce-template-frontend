@@ -14,11 +14,11 @@ export function Footer() {
     <footer className="bg-background relative overflow-hidden">
       {/* Decorative gold line */}
       <div className="px-6 md:px-20 lg:px-32">
-        <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
+        <div className="h-px bg-linear-to-r from-transparent via-accent/40 to-transparent" />
       </div>
 
       {/* Info grid — asymmetric editorial layout */}
-      <div className="px-6 md:px-20 lg:px-32 border-t border-white/5">
+      <div className="px-6 md:px-20 lg:px-24 border-t border-white/5">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
           {/* Navigation */}
           <div className="py-12 pr-8 border-b lg:border-b-0 lg:border-r border-white/5">
@@ -113,20 +113,20 @@ export function Footer() {
       {/* Bottom strip */}
       <div className="px-6 md:px-20 lg:px-32 py-6 border-t border-white/5">
         <div className="flex flex-col md:flex-row items-center justify-between gap-3">
-          <p className="text-[10px] text-muted/40 tracking-[0.1em]">
+          <p className="text-[10px] text-muted/40 tracking-widest">
             &copy; {new Date().getFullYear()} Lola Centro de Estética
           </p>
           <div className="flex items-center gap-6">
             <a
               href="#"
-              className="text-[10px] tracking-[0.1em] text-muted/40 hover:text-muted transition-colors duration-300"
+              className="text-[10px] tracking-widest text-muted/40 hover:text-muted transition-colors duration-300"
             >
               Privacidad
             </a>
             <span className="text-muted/20 text-[10px]">/</span>
             <a
               href="#"
-              className="text-[10px] tracking-[0.1em] text-muted/40 hover:text-muted transition-colors duration-300"
+              className="text-[10px] tracking-widest text-muted/40 hover:text-muted transition-colors duration-300"
             >
               Términos
             </a>
